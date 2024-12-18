@@ -2,6 +2,7 @@ import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 import {Root} from "@/providers/root";
+import Particles from "@/components/ui/particles";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -29,8 +30,15 @@ export default function RootLayout({
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
         <Root>
-            <div className="flex h-[100vh] bg-primary items-center justify-center">
+            <div className="relative flex h-[100vh] max-w-screen bg-primary justify-center overflow-clip">
                 {children}
+                <Particles
+                    className="absolute inset-0"
+                    quantity={100}
+                    ease={80}
+                    color="#ffffff"
+                    refresh
+                />
             </div>
         </Root>
         </body>
