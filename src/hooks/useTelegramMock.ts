@@ -1,4 +1,4 @@
-import { parseInitData, isTMA, mockTelegramEnv } from '@telegram-apps/sdk-react';
+import { isTMA, mockTelegramEnv } from '@telegram-apps/sdk-react';
 
 import { useClientOnce } from '@/hooks/useClientOnce';
 

@@ -71,7 +71,7 @@ const Particles: React.FC<ParticlesProps> = ({
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const canvasContainerRef = useRef<HTMLDivElement>(null)
     const context = useRef<CanvasRenderingContext2D | null>(null)
-    const circles = useRef<any[]>([])
+    const circles = useRef([])
     const mousePosition = MousePosition()
     const mouse = useRef<{ x: number, y: number }>({ x: 0, y: 0 })
     const canvasSize = useRef<{ w: number, h: number }>({ w: 0, h: 0 })
@@ -183,6 +183,7 @@ const Particles: React.FC<ParticlesProps> = ({
             context.current.setTransform(dpr, 0, 0, dpr, 0, 0)
 
             if (!update)
+                // @ts-expect-error no error
                 circles.current.push(circle)
         }
     }
