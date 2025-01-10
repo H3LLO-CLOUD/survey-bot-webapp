@@ -1,8 +1,8 @@
 import React, {JSX} from 'react'
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
-import {User} from "@telegram-apps/types";
 import {Check, X} from "lucide-react";
+import {User} from "@telegram-apps/types";
 import {Badge} from "@/components/ui/badge";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 
 type DataValue = string | number | boolean | null | undefined
 

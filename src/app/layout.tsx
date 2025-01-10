@@ -1,8 +1,8 @@
+import React from "react";
 import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
-import "./globals.css";
 import {Root} from "@/providers/root";
-import React from "react";
+import "./globals.css";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "WebApp",
-    description: "Telegram WebApp Boilerplate",
+    title: "TWA Starter",
+    description: "Telegram WebApp Starter",
 };
 
 export default async function RootLayout({

@@ -1,7 +1,5 @@
 "use client";
 
-import {useEffect} from "react";
-import axios from "axios";
 import {
     exitFullscreen,
     initData,
@@ -9,10 +7,9 @@ import {
     requestFullscreen,
     useSignal
 } from "@telegram-apps/sdk-react";
-import {Button} from "@/components/ui/button";
+import {X} from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Label} from "@/components/ui/label";
-import {Switch} from "@/components/ui/switch";
+import {Button} from "@/components/ui/button";
 import {
     Drawer, DrawerClose,
     DrawerContent,
@@ -22,7 +19,8 @@ import {
     DrawerTitle,
     DrawerTrigger
 } from "@/components/ui/drawer";
-import {X} from "lucide-react";
+import {Label} from "@/components/ui/label";
+import {Switch} from "@/components/ui/switch";
 import {InitDataTable} from "@/components/containers/init-data-table";
 import {BackButtonHandler} from "@/components/tma/back-button-handler";
 
@@ -30,19 +28,6 @@ export default function Home() {
     const initDataState = useSignal(initData.state);
     const fullscreen = useSignal(isFullscreen);
 
-    useEffect(() => {
-        try {
-            axios.post('/api/users', {
-                id: initDataState?.user?.id,
-                firstName: initDataState?.user?.firstName,
-                photoUrl: initDataState?.user?.photoUrl
-            }).then(res => console.log(res))
-        } catch (e) {
-            console.log(e)
-        }
-    }, [initDataState])
-
-    console.log(initDataState);
     return (
         <BackButtonHandler back={false}>
             <Avatar className="mt-4">
@@ -68,7 +53,7 @@ export default function Home() {
                 </DrawerContent>
             </Drawer>
             {
-                requestFullscreen.isSupported() &&
+                requestFullscreen.isSupported() && requestFullscreen.isAvailable() &&
                 <div className="flex items-center space-x-2">
                     <Switch id="fullscreen-mode" checked={fullscreen}
                             onCheckedChange={async () => await (fullscreen ? exitFullscreen() : requestFullscreen())}/>

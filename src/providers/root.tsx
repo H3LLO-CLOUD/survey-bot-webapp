@@ -7,7 +7,6 @@ import {
 import {
     useLaunchParams,
 } from "@telegram-apps/sdk-react";
-
 import {ErrorBoundary} from "@/components/tma/error-boundary";
 import {ErrorPage} from "@/components/tma/error-page";
 import {useDidMount} from "@/hooks/useDidMount";
@@ -22,13 +21,12 @@ function RootInner({children}: PropsWithChildren) {
 
     // Initialize the library.
     useClientOnce(() => {
-        init(debug);
+        init(debug).then();
     });
 
     // Enable debug mode to see all the methods sent and events received.
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        debug && import("eruda").then((lib) => lib.default.init());
+        if (debug) import("eruda").then((lib) => lib.default.init());
     }, [debug]);
 
     return children;
