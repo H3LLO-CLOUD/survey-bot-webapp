@@ -8,12 +8,11 @@ import {
     useLaunchParams,
 } from "@telegram-apps/sdk-react";
 
-import { ErrorBoundary } from "@/components/tma/error-boundary";
-import { ErrorPage } from "@/components/tma/error-page";
-import { useDidMount } from "@/hooks/useDidMount";
-import { useClientOnce } from "@/hooks/useClientOnce";
-import { init } from "@/init";
-import "./styles.css";
+import {ErrorBoundary} from "@/components/tma/error-boundary";
+import {ErrorPage} from "@/components/tma/error-page";
+import {useDidMount} from "@/hooks/useDidMount";
+import {useClientOnce} from "@/hooks/useClientOnce";
+import {init} from "@/init";
 
 function RootInner({children}: PropsWithChildren) {
     const isDev = process.env.NODE_ENV === "development";
@@ -41,9 +40,12 @@ export function Root(props: PropsWithChildren) {
     // side.
     const didMount = useDidMount();
 
-    return didMount ? (
-        <ErrorBoundary fallback={ ErrorPage }>
-            <RootInner { ...props } />
+    return didMount ?
+        <ErrorBoundary fallback={ErrorPage}>
+            <RootInner {...props} />
         </ErrorBoundary>
-    ) : <div className="root__loading">Loading</div>;
+        :
+        <div className="absolute inset-0 flex items-center justify-center">
+            <h3 className="color-white">Загрузка...</h3>
+        </div>;
 }

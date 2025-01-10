@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, {useEffect, useRef} from "react";
 
 interface HackerBackgroundProps {
     color?: string;
@@ -76,7 +76,11 @@ const HackerBackground: React.FC<HackerBackgroundProps> = ({
     return (
         <canvas
             ref={canvasRef}
-            className={`pointer-events-none ${className}`}
+            className={`
+              pointer-events-none
+
+              ${className}
+            `}
             style={{
                 position: "absolute",
                 top: 0,

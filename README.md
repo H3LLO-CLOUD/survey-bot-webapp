@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Это стартовый шаблон для создания [Telegram Web Apps](https://core.telegram.org/bots/webapps), использующий Next.js,
+Tailwind CSS, Shadcn UI.
 
-## Getting Started
+## Начало работы
 
-First, run the development server:
+- Создайте бота и webapp через [@BotFather](https://t.me/BotFather).
+- Чтобы была возможность локальной разработки с поддержкой Hot Reload, при создании webapp внутри бота, укажите
+  `https://127.0.0.1:3000` в качестве web app URL.
+- Запустите локальный сервер:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev:https
+# или
+yarn dev:https
+# или
+pnpm dev:https
+# или
+bun dev:https
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Теперь вы можете открыть своё локальное приложение внутри Telegram.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Начните редактировать `app/page.tsx`. При редактировании вы будете видеть изменения без перезагрузки.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Полезные ссылки
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Telegram Web Apps](https://core.telegram.org/bots/webapps) - документация Telegram Web Apps.
+- [@telegram-apps/sdk-react](https://docs.telegram-mini-apps.com/packages/telegram-apps-sdk-react/2-x) - документация
+  `@telegram-apps/sdk-react`.
+- [Next.js Documentation](https://nextjs.org/docs) - документация Next.js.
+- [shadcn/ui](https://ui.shadcn.com/docs) - документация shadcn/ui.
