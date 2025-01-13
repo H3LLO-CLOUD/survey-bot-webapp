@@ -39,7 +39,7 @@ export async function init(debug: boolean): Promise<void> {
         void viewport.mount().catch((e) => {
             console.error("Something went wrong mounting the viewport", e);
         }).then(() => {
-            if (viewport.requestFullscreen.isSupported() && !viewport.isFullscreen()) viewport.requestFullscreen()
+            if (viewport.requestFullscreen.isSupported() && viewport.requestFullscreen.isAvailable() && !viewport.isFullscreen()) viewport.requestFullscreen()
         });
     }
 

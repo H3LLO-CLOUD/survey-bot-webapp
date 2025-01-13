@@ -1,5 +1,5 @@
 import React from "react";
-import type {Metadata} from "next";
+import type {Metadata, Viewport} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import {Root} from "@/providers/root";
 import "./globals.css";
@@ -13,6 +13,13 @@ const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+}
 
 export const metadata: Metadata = {
     title: "TWA Starter",
@@ -37,8 +44,8 @@ export default async function RootLayout({
         <Root>
             <div className={
                 `
-                  flex h-screen max-h-screen flex-col items-center
-                  justify-center gap-4 overflow-clip px-4
+                  flex h-screen w-screen flex-col items-center justify-center
+                  gap-4 overflow-hidden px-4
                 `
             }>
                 {children}

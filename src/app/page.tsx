@@ -5,7 +5,7 @@ import {
     initData,
     isFullscreen,
     requestFullscreen,
-    useSignal
+    useSignal, viewport
 } from "@telegram-apps/sdk-react";
 import {X} from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
@@ -23,10 +23,15 @@ import {Label} from "@/components/ui/label";
 import {Switch} from "@/components/ui/switch";
 import {InitDataTable} from "@/components/containers/init-data-table";
 import {BackButtonHandler} from "@/components/tma/back-button-handler";
+import {useEffect} from "react";
 
 export default function Home() {
     const initDataState = useSignal(initData.state);
     const fullscreen = useSignal(isFullscreen);
+    useEffect(() => {
+        console.log("isSupported: " + viewport.requestFullscreen.isSupported())
+        console.log("isAvailable: " + viewport.requestFullscreen.isAvailable())
+    }, [])
 
     return (
         <BackButtonHandler back={false}>
