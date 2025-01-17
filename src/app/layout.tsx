@@ -3,6 +3,7 @@ import type {Metadata, Viewport} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 import {Root} from "@/providers/root";
 import "./globals.css";
+import {ViewTransitions} from "next-view-transitions";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -19,6 +20,7 @@ export const viewport: Viewport = {
     initialScale: 1,
     maximumScale: 1,
     userScalable: false,
+    themeColor: "white"
 }
 
 export const metadata: Metadata = {
@@ -32,6 +34,7 @@ export default async function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
+        <ViewTransitions>
         <html lang="ru">
         <body
             className={`
@@ -44,8 +47,8 @@ export default async function RootLayout({
         <Root>
             <div className={
                 `
-                  flex h-screen w-screen flex-col items-center justify-center
-                  gap-4 overflow-hidden px-4
+                  flex min-h-screen flex-col items-center justify-center px-4
+                  pb-4
                 `
             }>
                 {children}
@@ -53,5 +56,6 @@ export default async function RootLayout({
         </Root>
         </body>
         </html>
+        </ViewTransitions>
     );
 }

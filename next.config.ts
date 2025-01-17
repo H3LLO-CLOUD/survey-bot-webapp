@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
                 port: '',
                 search: '',
             },
+            {
+                protocol: 'https',
+                hostname: 'images.unsplash.com',
+                port: '',
+                search: '',
+            },
         ]
     },
     async rewrites() {

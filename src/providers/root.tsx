@@ -12,6 +12,7 @@ import {ErrorPage} from "@/components/tma/error-page";
 import {useDidMount} from "@/hooks/useDidMount";
 import {useClientOnce} from "@/hooks/useClientOnce";
 import {init} from "@/init";
+import {Loader} from "lucide-react";
 
 function RootInner({children}: PropsWithChildren) {
     const isDev = process.env.NODE_ENV === "development";
@@ -43,7 +44,9 @@ export function Root(props: PropsWithChildren) {
             <RootInner {...props} />
         </ErrorBoundary>
         :
-        <div className="absolute inset-0 flex items-center justify-center">
-            <h3 className="color-white">Загрузка...</h3>
-        </div>;
+        <div className={`
+          flex h-screen w-screen flex-col items-center justify-center
+        `}>
+            <Loader />
+        </div>
 }

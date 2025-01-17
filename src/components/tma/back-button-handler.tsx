@@ -1,8 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { backButton } from '@telegram-apps/sdk-react';
 import { PropsWithChildren, useEffect } from 'react';
+import {useTransitionRouter} from "next-view-transitions";
 
 export function BackButtonHandler({ children, back = true }: PropsWithChildren<{
     /**
@@ -10,7 +10,7 @@ export function BackButtonHandler({ children, back = true }: PropsWithChildren<{
      */
     back?: boolean
 }>) {
-    const router = useRouter();
+    const router = useTransitionRouter()
 
     useEffect(() => {
         if (back) {

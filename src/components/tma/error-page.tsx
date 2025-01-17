@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import {Button} from "@/components/ui/button";
+import {BackButtonHandler} from "@/components/tma/back-button-handler";
 
 export function ErrorPage({
                               error,
@@ -14,7 +15,7 @@ export function ErrorPage({
     }, [error]);
 
     return (
-        <div>
+        <BackButtonHandler>
             <h2>An unhandled error occurred!</h2>
             <blockquote>
                 <code>
@@ -22,6 +23,6 @@ export function ErrorPage({
                 </code>
             </blockquote>
             {reset && <Button onClick={() => reset()}>Try again</Button>}
-        </div>
+        </BackButtonHandler>
     );
 }
