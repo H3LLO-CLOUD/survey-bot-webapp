@@ -1,6 +1,6 @@
 import {cn} from "@/lib/utils";
 import {useTransitionRouter} from "next-view-transitions";
-import Noise from "@/components/ui/noise";
+import Image from "next/image";
 import {ArrowUpRight} from "lucide-react";
 
 type SurveyType = {
@@ -87,53 +87,44 @@ const Survey = ({
             <div className={cn(
                 "relative overflow-hidden rounded-2xl",
                 "bg-white/80 backdrop-blur-xl",
-                "dark:bg-zinc-900/80",
                 "border border-zinc-200/50 shadow-sm",
-                "dark:border-zinc-800/50",
                 `
                   transition-all duration-300
 
                   hover:shadow-md
                 `,
-                `
-                  dark:hover:border-zinc-700/50
-
-                  hover:border-zinc-300/50
-                `
+                `hover:border-zinc-300/50`
             )}>
-                {/* Gradient Background */}
+                {/* Image Section - increased height */}
+                <div className="relative h-[320px] overflow-hidden">
+                    <Image
+                        src="/card-bg.jpg"
+                        alt={title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className={`
+                          object-cover transition-transform duration-500
+                        `}
+                    />
+                </div>
+
+                {/* Content Overlay - adjusted gradient for taller image */}
                 <div className={cn(
                     "absolute inset-0",
-                    gradientClass // Use the gradient class here
+                    "bg-gradient-to-t from-black/90 via-black/40 to-transparent"
                 )}/>
 
                 {/* Badge */}
                 <div className="absolute right-3 top-3">
                     <span className={cn(
                         "rounded-full px-2.5 py-1 text-xs font-medium",
-                        "bg-white/90 text-zinc-800",
-                        "dark:bg-zinc-900/90 dark:text-zinc-200",
+                        "bg-white/90 text-white",
                         "backdrop-blur-md",
                         "shadow-sm",
-                        `
-                          border border-white/20
-
-                          dark:border-zinc-800/50
-                        `
+                        `border border-white/20`
                     )}>
                         {createdAt.toLocaleString("ru-RU", {month: "short", day: "numeric"})}
                     </span>
-                </div>
-
-                {/* Noise Section */}
-                <div className="relative min-h-[260px]">
-                    <Noise
-                        patternSize={250}
-                        patternScaleX={1}
-                        patternScaleY={1}
-                        patternRefreshInterval={2}
-                        patternAlpha={25}
-                    />
                 </div>
 
                 {/* Content Section */}
@@ -143,35 +134,21 @@ const Survey = ({
                             <h3 className={`
                               font-mono text-2xl font-bold leading-snug
                               text-white
-
-                              dark:text-zinc-100
                             `} style={{viewTransitionName: `title-${surveyId}`}}>
                                 {title}
                             </h3>
-                            <p className={`
-                              line-clamp-2 text-md text-zinc-50
-
-                              dark:text-zinc-300
-                            `} style={{viewTransitionName: `description-${surveyId}`}}>
+                            <p className={`line-clamp-2 text-md text-zinc-50`} style={{viewTransitionName: `description-${surveyId}`}}>
                                 {description}
                             </p>
                         </div>
                         <div className={cn(
                             "self-end rounded-full p-2",
-                            `
-                              bg-white/10
-
-                              dark:bg-zinc-800/50
-                            `,
+                            `bg-white/10`,
                             "backdrop-blur-md",
-                            `
-                              dark:group-hover:bg-zinc-700/50
-
-                              group-hover:bg-white/20
-                            `,
+                            `group-hover:bg-white/20`,
                             "transition-colors duration-300"
                         )}>
-                            <ArrowUpRight className="h-4 w-4 text-white"/>
+                            <ArrowUpRight className="h-4 w-4 text-zinc-800"/>
                         </div>
                     </div>
                 </div>

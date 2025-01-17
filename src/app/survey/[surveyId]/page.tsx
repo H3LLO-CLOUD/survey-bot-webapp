@@ -1,10 +1,11 @@
 "use client"
 import {BackButtonHandler} from "@/components/tma/back-button-handler";
 import {motion} from "motion/react"
-import {useParams, useSearchParams} from "next/navigation";
+import {useParams} from "next/navigation";
 import Noise from "@/components/ui/noise";
+import Image from "next/image";
 
-const Survey = {
+const survey = {
     title: "Как улучшить рабочие процессы?",
     description: "Поделитесь своими идеями по оптимизации процессов в нашей команде.",
     image: "https://ferf1mheo22r9ira.public.blob.vercel-storage.com/profile-mjss82WnWBRO86MHHGxvJ2TVZuyrDv.jpeg",
@@ -13,23 +14,11 @@ const Survey = {
 
 const Page = () => {
     const params = useParams<{ surveyId: string }>()
-    const searchParams = useSearchParams();
-    const gradientClass = searchParams.get("gradient") || "bg-black";
 
     return (
         <BackButtonHandler>
-            <div className={`
-              absolute inset-0 px-4
-
-              ${gradientClass}
-            `} style={{viewTransitionName: `card-${params.surveyId}`}}>
-                <Noise
-                    patternSize={250}
-                    patternScaleX={1}
-                    patternScaleY={1}
-                    patternRefreshInterval={2}
-                    patternAlpha={25}
-                />
+            <div className={`absolute inset-0 px-4`} style={{viewTransitionName: `card-${params.surveyId}`}}>
+                <Image src="/card-bg.jpg" alt={survey.title} height={1000} width={1500} />
 
                 <motion.div
                     className={`
@@ -40,13 +29,13 @@ const Page = () => {
                     transition={{duration: 0.5}}
                 >
                     <h1 className="text-4xl font-bold text-white"
-                        style={{viewTransitionName: `title-${params.surveyId}`}}>{Survey.title}</h1>
+                        style={{viewTransitionName: `title-${params.surveyId}`}}>{survey.title}</h1>
                     <h3 className={`
                       text-lg text-zinc-50
 
                       dark:text-zinc-300
                     `}
-                        style={{viewTransitionName: `description-${params.surveyId}`}}>{Survey.description}</h3>
+                        style={{viewTransitionName: `description-${params.surveyId}`}}>{survey.description}</h3>
                 </motion.div>
 
                 <motion.div
