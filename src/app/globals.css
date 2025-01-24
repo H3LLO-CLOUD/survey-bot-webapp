@@ -3,10 +3,15 @@
 @tailwind utilities;
 
 body {
+  /*background: var(--tg-theme-bg-color);*/
   font-family: Arial, Helvetica, sans-serif;
   text-wrap: pretty;
   overflow-x: hidden;
 }
+
+/*[style*="view-transition-name"] {*/
+/*  border: 2px solid red !important; !* Highlight elements with viewTransitionName *!*/
+/*}*/
 
 @layer base {
   :root {

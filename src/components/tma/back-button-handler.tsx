@@ -12,7 +12,7 @@ export function BackButtonHandler({ children, back = true }: PropsWithChildren<{
 }>) {
     const router = useTransitionRouter()
 
-    useEffect(() => {
+        useEffect(() => {
         if (back) {
             backButton.show();
             return backButton.onClick(() => {

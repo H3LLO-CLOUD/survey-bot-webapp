@@ -63,10 +63,11 @@ const buttonVariants = cva(
                     `,
                 outline:
                     `
-                      border border-input bg-transparent text-primary/80
+                      border border-zinc-200/50 bg-transparent text-primary/80
                       shadow-sm
 
-                      hover:bg-accent hover:text-accent-foreground
+                      hover:border-zinc-300/50 hover:bg-accent
+                      hover:text-accent-foreground
                     `,
                 ghost: `
                   text-muted-foreground

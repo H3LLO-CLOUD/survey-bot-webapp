@@ -35,27 +35,20 @@ export default async function RootLayout({
 }>) {
     return (
         <ViewTransitions>
-        <html lang="ru">
-        <body
-            className={`
-              ${geistSans.variable}
-              ${geistMono.variable}
+            <html lang="ru">
+            <body
+                className={`
+                  ${geistSans.variable}
+                  ${geistMono.variable}
 
-              antialiased
-            `}
-        >
-        <Root>
-            <div className={
-                `
-                  flex min-h-screen flex-col items-center justify-center px-4
-                  pb-4
-                `
-            }>
+                  absolute inset-0 h-screen w-screen overflow-hidden antialiased
+                `}
+            >
+            <Root>
                 {children}
-            </div>
-        </Root>
-        </body>
-        </html>
+            </Root>
+            </body>
+            </html>
         </ViewTransitions>
     );
 }

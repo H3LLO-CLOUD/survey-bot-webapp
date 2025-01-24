@@ -1,175 +1,165 @@
 import {cn} from "@/lib/utils";
 import {useTransitionRouter} from "next-view-transitions";
+import {ArrowUpRight, CheckCheck, Gift} from "lucide-react";
+import axios from "axios";
+import {useEffect, useState} from "react";
+import {Progress} from "@/components/ui/progress";
+import {initData, useSignal, popup} from "@telegram-apps/sdk-react";
+import {SurveyType} from "@/app/types/survey";
 import Image from "next/image";
-import {ArrowUpRight} from "lucide-react";
-
-type SurveyType = {
-    surveyId: number;
-    title: string;
-    description: string;
-    badge?: {
-        text: string;
-        variant: "pink" | "indigo" | "orange";
-    };
-    createdAt: Date;
-};
-
-const surveys: SurveyType[] = [
-    {
-        surveyId: 1000001,
-        title: "Как улучшить рабочие процессы?",
-        description: "Поделитесь своими идеями по оптимизации процессов в нашей команде.",
-        createdAt: new Date(1673680000000),
-    },
-    {
-        surveyId: 1000002,
-        title: "Ваше мнение о гибридной работе",
-        description: "Узнаем, что думают сотрудники о совмещении удалёнки и офиса.",
-        createdAt: new Date(1673670000000),
-    },
-    {
-        surveyId: 1000003,
-        title: "Какие технологии стоит изучить в следующем квартале?",
-        description: "Подскажите, на какие инструменты стоит сделать упор.",
-        createdAt: new Date(1673690000000),
-    },
-    {
-        surveyId: 1000004,
-        title: "Как сделать корпоративы незабываемыми?",
-        description: "Идеи для создания лучших мероприятий в компании.",
-        createdAt: new Date(1673650000000),
-    },
-    {
-        surveyId: 1000005,
-        title: "Что бы вы изменили в нашем техстеке?",
-        description: "Пусть ваш голос станет шагом к улучшениям.",
-        createdAt: new Date(1673640000000),
-    },
-];
-
-const twGradients = [
-    "bg-gradient-to-r from-purple-500 via-pink-500 to-red-500",
-    "bg-gradient-to-r from-indigo-500 via-purple-400 to-pink-400",
-    "bg-gradient-to-r from-teal-400 via-blue-500 to-indigo-500",
-    "bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500",
-    "bg-gradient-to-r from-lime-400 via-green-500 to-teal-500",
-    "bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-500",
-    "bg-gradient-to-r from-rose-400 via-fuchsia-500 to-purple-500",
-    "bg-gradient-to-r from-amber-500 via-yellow-500 to-lime-500",
-    "bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500",
-    "bg-gradient-to-r from-blue-400 via-violet-500 to-purple-600",
-    "bg-gradient-to-r from-gray-700 via-gray-900 to-black",
-    "bg-gradient-to-r from-red-400 via-red-600 to-red-700",
-    "bg-gradient-to-r from-green-400 via-green-500 to-teal-600",
-    "bg-gradient-to-r from-orange-400 via-orange-500 to-red-500",
-    "bg-gradient-to-r from-fuchsia-600 via-purple-600 to-indigo-700",
-    "bg-gradient-to-r from-cyan-500 via-teal-500 to-green-500",
-    "bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800",
-    "bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500",
-    "bg-gradient-to-r from-yellow-500 via-orange-400 to-red-400",
-    "bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500"
-];
+import {Carousel, CarouselApi, CarouselContent, CarouselItem} from "@/components/ui/carousel";
 
 const Survey = ({
-                    surveyId, title, createdAt, description, gradientClass
-                }: SurveyType & { gradientClass: string }) => {
+                    id, userId, title, progress, description
+                }: SurveyType) => {
+    const [promoCode, setPromoCode] = useState<string | null>(null);
+
+    const fetchPromoCode = async (surveyId, userId) => {
+        try {
+            const response = await axios.get('/api/get-promo', {headers: {userId: userId, surveyId: surveyId}});
+            setPromoCode(response.data.promoCode); // Assuming the API returns { promoCode: "CODE123" }
+        } catch (error) {
+            console.error('Error fetching promo code:', error);
+        }
+    };
     const router = useTransitionRouter();
 
     return (
         <div
-            onClick={(e) => {
-                e.preventDefault();
-                router.push(`/survey/${surveyId}?gradient=${encodeURIComponent(gradientClass)}`);
+            onClick={() => {
+                if (progress === 100) {
+                    fetchPromoCode(id, userId)
+                    return popup
+                        .open({
+                            title: 'Уведомление',
+                            message: `Твой промокод за прохождение опроса: ${promoCode}`,
+                            buttons: [{id: 'ok', type: 'ok'}]
+                        })
+                        .then(buttonId =>
+                            console.log(buttonId === null
+                                ? 'User did not click any button'
+                                : `User clicked a button with ID "${buttonId}"`
+                            )
+                        )
+                }
+                router.push(`/survey/${id}`);
             }}
-            className={`group block w-full max-w-md cursor-pointer`}
-            style={{viewTransitionName: `card-${surveyId}`}}
+            className="group block w-full max-w-md cursor-pointer"
+            style={{viewTransitionName: `card-${id}`}}
         >
             <div className={cn(
-                "relative overflow-hidden rounded-2xl",
-                "bg-white/80 backdrop-blur-xl",
-                "border border-zinc-200/50 shadow-sm",
-                `
-                  transition-all duration-300
-
-                  hover:shadow-md
-                `,
-                `hover:border-zinc-300/50`
+                "relative rounded-2xl",
+                "border border-zinc-200/50",
+                `transition-all duration-300`,
+                `hover:border-zinc-300/50`,
+                progress === 100 && 'border-green-200/50 bg-green-50',
             )}>
-                {/* Image Section - increased height */}
-                <div className="relative h-[320px] overflow-hidden">
-                    <Image
-                        src="/card-bg.jpg"
-                        alt={title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className={`
-                          object-cover transition-transform duration-500
-                        `}
-                    />
-                </div>
+                {/* CheckCheck */}
+                {progress === 100 && <span className={`
+                  absolute right-5 top-5 rounded-xl
+                `} style={{viewTransitionName: `badge-${id}`}}>
+                    <CheckCheck className="text-green-500"/>
+                </span>}
 
-                {/* Content Overlay - adjusted gradient for taller image */}
-                <div className={cn(
-                    "absolute inset-0",
-                    "bg-gradient-to-t from-black/90 via-black/40 to-transparent"
-                )}/>
-
-                {/* Badge */}
-                <div className="absolute right-3 top-3">
-                    <span className={cn(
-                        "rounded-full px-2.5 py-1 text-xs font-medium",
-                        "bg-white/90 text-white",
-                        "backdrop-blur-md",
-                        "shadow-sm",
-                        `border border-white/20`
-                    )}>
-                        {createdAt.toLocaleString("ru-RU", {month: "short", day: "numeric"})}
-                    </span>
-                </div>
 
                 {/* Content Section */}
-                <div className="absolute bottom-0 left-0 right-0 p-5">
+                <div className="p-5">
                     <div className="flex items-center justify-between gap-3">
-                        <div className="space-y-1.5">
+                        <div className="space-y-2.5">
                             <h3 className={`
-                              font-mono text-2xl font-bold leading-snug
-                              text-white
-                            `} style={{viewTransitionName: `title-${surveyId}`}}>
+                              font-mono text-xl font-bold leading-6
+                            `} style={{viewTransitionName: `title-${id}`}}>
                                 {title}
                             </h3>
-                            <p className={`line-clamp-2 text-md text-zinc-50`} style={{viewTransitionName: `description-${surveyId}`}}>
+                            <p className={`line-clamp-2 text-md`}
+                               style={{viewTransitionName: `description-${id}`}}>
                                 {description}
                             </p>
                         </div>
                         <div className={cn(
                             "self-end rounded-full p-2",
-                            `bg-white/10`,
+                            `bg-black/5`,
                             "backdrop-blur-md",
-                            `group-hover:bg-white/20`,
+                            `group-hover:bg-black/10`,
                             "transition-colors duration-300"
                         )}>
-                            <ArrowUpRight className="h-4 w-4 text-zinc-800"/>
+                            {progress < 100 ? <ArrowUpRight className={`
+                              h-4 w-4 text-zinc-800
+                            `}/> : <Gift className={`h-4 w-4 text-zinc-800`}/>}
                         </div>
                     </div>
                 </div>
+                {progress > 0 && progress < 100 && <Progress value={progress} className={`
+                  mx-5 my-2 w-auto
+                `}/>}
             </div>
         </div>
     );
 };
 
 const SurveysList = () => {
+    const [surveys, setSurveys] = useState<SurveyType[]>([]);
+    const initDataState = useSignal(initData.state);
+    const [api, setApi] = useState<CarouselApi>();
+    const [current, setCurrent] = useState(0);
+
+    useEffect(() => {
+        if (!api) {
+            return;
+        }
+
+        setTimeout(() => {
+            if (api.selectedScrollSnap() + 1 === api.scrollSnapList().length) {
+                setCurrent(0);
+                api.scrollTo(0);
+            } else {
+                api.scrollNext();
+                setCurrent(current + 1);
+            }
+        }, 3000);
+    }, [api, current]);
+    useEffect(() => {
+        const fetchSurveyList = async () => {
+            try {
+                const response = await axios.get('/api/get-survey-list', {headers: {userId: initDataState?.user?.id}});
+                setSurveys(response.data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchSurveyList().then();
+    }, [initDataState]);
 
     return (
-        <div className="flex w-full flex-col items-center gap-4 bg-white">
-            {surveys.map((survey, index) => (
-                <Survey
-                    key={survey.title}
-                    {...survey}
-                    gradientClass={twGradients[index % twGradients.length]} // Assign gradients cyclically
-                />
-            ))}
+        <div className="container px-4">
+            <div className="flex flex-col gap-10">
+                <Carousel setApi={setApi} className="w-full">
+                    <CarouselContent>
+                        {surveys.length > 0 && surveys.map((survey, index) => (
+                            <CarouselItem key={index}>
+                                <Survey
+                                    key={survey.title}
+                                    {...survey}
+                                />
+                            </CarouselItem>
+                        ))
+                        }
+                    </CarouselContent>
+                </Carousel>
+                {surveys.length <= 0 && <div className={`
+                  flex w-full flex-col items-center
+                `}>
+                    <Image src="/upset.webp"
+                           unoptimized
+                           className={`h-20 w-20`} width={80}
+                           height={80} alt={"Upset"}/>
+                    <span>Пока что, активных опросов нет.</span>
+                </div>}
+
+            </div>
         </div>
-    );
-};
+    )
+}
 
 export default SurveysList;

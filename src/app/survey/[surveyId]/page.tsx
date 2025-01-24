@@ -1,53 +1,78 @@
 "use client"
 import {BackButtonHandler} from "@/components/tma/back-button-handler";
-import {motion} from "motion/react"
 import {useParams} from "next/navigation";
-import Noise from "@/components/ui/noise";
-import Image from "next/image";
+import {Badge} from "@/components/ui/badge";
+import SurveyBuilder from "@/components/containers/survey-builder";
+import {useEffect, useState} from "react";
+import {initData, useSignal} from "@telegram-apps/sdk-react";
+import axios from "axios";
+import {SurveyType} from "@/app/types/survey";
 
-const survey = {
-    title: "Как улучшить рабочие процессы?",
-    description: "Поделитесь своими идеями по оптимизации процессов в нашей команде.",
-    image: "https://ferf1mheo22r9ira.public.blob.vercel-storage.com/profile-mjss82WnWBRO86MHHGxvJ2TVZuyrDv.jpeg",
-    createdAt: new Date(1673680000000)
-}
+// const surveySchema = {
+//     questions: [
+//         {id: 'q1', type: 'yesno', question: 'Do you like ice cream?'},
+//         {
+//             id: 'q2',
+//             type: 'single',
+//             question: 'What is your favorite color?',
+//             options: ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Black', 'White'],
+//         },
+//         {
+//             id: 'q3',
+//             type: 'multi',
+//             question: 'Select your hobbies:',
+//             options: ['Reading', 'Gaming', 'Cooking'],
+//         },
+//         {
+//             id: 'q4',
+//             type: 'range',
+//             question: 'Rate your satisfaction:',
+//             range: {min: 1, max: 10},
+//         },
+//         {id: 'q5', type: 'text', question: 'What is your name?'},
+//         {id: 'q6', type: 'number', question: 'How old are you?'},
+//     ],
+// };
 
 const Page = () => {
+    const [survey, setSurvey] = useState<SurveyType>();
     const params = useParams<{ surveyId: string }>()
+    const initDataState = useSignal(initData.state);
+    useEffect(() => {
+        const fetchSurvey = async () => {
+            try {
+                const response = await axios.get('/api/get-survey', {
+                    headers: {
+                        userId: initDataState?.user?.id,
+                        surveyId: params.surveyId
+                    }
+                });
+                setSurvey(response.data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchSurvey().then();
+    }, [initDataState?.user?.id, params.surveyId]);
+    console.log(survey)
+    if (!survey) return;
 
     return (
         <BackButtonHandler>
-            <div className={`absolute inset-0 px-4`} style={{viewTransitionName: `card-${params.surveyId}`}}>
-                <Image src="/card-bg.jpg" alt={survey.title} height={1000} width={1500} />
-
-                <motion.div
-                    className={`
-                      flex h-full flex-col items-center justify-center
-                    `}
-                    initial={{opacity: 0, scale: 0.95}}
-                    animate={{opacity: 1, scale: 1}}
-                    transition={{duration: 0.5}}
-                >
-                    <h1 className="text-4xl font-bold text-white"
-                        style={{viewTransitionName: `title-${params.surveyId}`}}>{survey.title}</h1>
-                    <h3 className={`
-                      text-lg text-zinc-50
-
-                      dark:text-zinc-300
-                    `}
-                        style={{viewTransitionName: `description-${params.surveyId}`}}>{survey.description}</h3>
-                </motion.div>
-
-                <motion.div
-                    className="absolute bottom-10 w-full px-6"
-                    initial={{opacity: 0, y: 50}}
-                    animate={{opacity: 1, y: 0}}
-                    transition={{delay: 0.3, duration: 0.5}}
-                >
-                    <div className="rounded-lg bg-white p-6 shadow-md">
-                        <p className="text-gray-700">Survey questions go here...</p>
-                    </div>
-                </motion.div>
+            {/* Badge */}
+            <div className={`relative flex w-full flex-col items-center`}>
+                {survey?.createdAt &&
+                    <Badge variant="subtle" className={`
+                      absolute right-2 top-2 rounded-xl
+                    `} style={{viewTransitionName: `badge-${params.surveyId}`}}>
+                        {survey.createdAt.toLocaleString("ru-RU", {month: "short", day: "numeric"})}
+                    </Badge>
+                }
+                <div className="container mx-auto">
+                    <SurveyBuilder initialSchema={survey} surveyId={params.surveyId} title={survey.title}
+                                   description={survey.description} userId={initDataState?.user?.id} />
+                </div>
             </div>
         </BackButtonHandler>
     )
