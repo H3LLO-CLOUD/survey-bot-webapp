@@ -11,10 +11,11 @@ import {motion, AnimatePresence} from 'framer-motion';
 import {AnswerVariantsType, SurveyBuilderProps} from '@/app/types/survey';
 import axios from 'axios';
 import Image from 'next/image';
-import {ScratchToReveal} from '@/components/containers/scratch-to-reveal';
+// import {ScratchToReveal} from '@/components/containers/scratch-to-reveal';
 import {cn} from '@/lib/utils';
-import confetti from 'canvas-confetti';
+// import confetti from 'canvas-confetti';
 import {viewport} from "@telegram-apps/sdk-react";
+import Link from 'next/link';
 
 // Question components
 const questionComponents = {
@@ -105,9 +106,9 @@ const validateSchema = (schema) => {
 
 const SurveyBuilder = ({initialSchema, surveyId, userId}: SurveyBuilderProps) => {
     const [schema, setSchema] = useState(validateSchema(initialSchema));
-    const [promoCode, setPromoCode] = useState<string | null>(null);
-    const [isFetchingPromo, setIsFetchingPromo] = useState(false);
-    const [fetchPromoError, setFetchPromoError] = useState<string | null>(null);
+    // const [promoCode, setPromoCode] = useState<string | null>(null);
+    // const [isFetchingPromo, setIsFetchingPromo] = useState(false);
+    // const [fetchPromoError, setFetchPromoError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(() => {
         const index = schema.questions.findIndex((question) => question.userAnswer === null);
@@ -162,7 +163,7 @@ const SurveyBuilder = ({initialSchema, surveyId, userId}: SurveyBuilderProps) =>
         if (currentQuestion < schema.questions.length - 1) {
             setCurrentQuestion((prev) => prev + 1);
         } else if (currentQuestion === schema.questions.length - 1) {
-            handleSubmit();
+            handleSubmit().then();
         }
     };
 
@@ -174,7 +175,7 @@ const SurveyBuilder = ({initialSchema, surveyId, userId}: SurveyBuilderProps) =>
 
     const handleSubmit = async () => {
         setIsCompleted(true);
-        await fetchPromoCode();
+        // await fetchPromoCode();
     };
 
     const isNextDisabled = () => {
@@ -182,20 +183,20 @@ const SurveyBuilder = ({initialSchema, surveyId, userId}: SurveyBuilderProps) =>
         return currentQuestionData && !currentQuestionData.userAnswer;
     };
 
-    const fetchPromoCode = async () => {
-        setIsFetchingPromo(true);
-        setFetchPromoError(null);
-
-        try {
-            const response = await axios.get('/api/get-promo', {headers: {userId: userId, surveyId: surveyId}});
-            setPromoCode(response.data);
-        } catch (error) {
-            console.error('Error fetching promo code:', error);
-            setFetchPromoError('Failed to fetch promo code. Please try again later.');
-        } finally {
-            setIsFetchingPromo(false);
-        }
-    };
+    // const fetchPromoCode = async () => {
+    //     setIsFetchingPromo(true);
+    //     setFetchPromoError(null);
+    //
+    //     try {
+    //         const response = await axios.get('/api/get-promo', {headers: {userId: userId, surveyId: surveyId}});
+    //         setPromoCode(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching promo code:', error);
+    //         setFetchPromoError('Failed to fetch promo code. Please try again later.');
+    //     } finally {
+    //         setIsFetchingPromo(false);
+    //     }
+    // };
 
     const progressPercentage = Math.round((currentQuestion / schema.questions.length) * 100);
 
@@ -211,43 +212,43 @@ const SurveyBuilder = ({initialSchema, surveyId, userId}: SurveyBuilderProps) =>
         }),
     };
 
-    const confettiBoom = () => {
-        const count = 200;
-        const defaults = {
-            origin: {y: 0.7},
-        };
-
-        function fire(particleRatio: number, opts: { spread: number, startVelocity?: number, decay?: number, scalar?: number }) {
-            confetti({
-                ...defaults,
-                ...opts,
-                particleCount: Math.floor(count * particleRatio),
-            });
-        }
-
-        fire(0.25, {
-            spread: 26,
-            startVelocity: 55,
-        });
-        fire(0.2, {
-            spread: 60,
-        });
-        fire(0.35, {
-            spread: 100,
-            decay: 0.91,
-            scalar: 0.8,
-        });
-        fire(0.1, {
-            spread: 120,
-            startVelocity: 25,
-            decay: 0.92,
-            scalar: 1.2,
-        });
-        fire(0.1, {
-            spread: 120,
-            startVelocity: 45,
-        });
-    };
+    // const confettiBoom = () => {
+    //     const count = 200;
+    //     const defaults = {
+    //         origin: {y: 0.7},
+    //     };
+    //
+    //     function fire(particleRatio: number, opts: { spread: number, startVelocity?: number, decay?: number, scalar?: number }) {
+    //         confetti({
+    //             ...defaults,
+    //             ...opts,
+    //             particleCount: Math.floor(count * particleRatio),
+    //         });
+    //     }
+    //
+    //     fire(0.25, {
+    //         spread: 26,
+    //         startVelocity: 55,
+    //     });
+    //     fire(0.2, {
+    //         spread: 60,
+    //     });
+    //     fire(0.35, {
+    //         spread: 100,
+    //         decay: 0.91,
+    //         scalar: 0.8,
+    //     });
+    //     fire(0.1, {
+    //         spread: 120,
+    //         startVelocity: 25,
+    //         decay: 0.92,
+    //         scalar: 1.2,
+    //     });
+    //     fire(0.1, {
+    //         spread: 120,
+    //         startVelocity: 45,
+    //     });
+    // };
 
     return (
         <Card className={`
@@ -271,42 +272,46 @@ const SurveyBuilder = ({initialSchema, surveyId, userId}: SurveyBuilderProps) =>
                             height={512}
                             alt="Congrats!"
                         />
-                        <p className="mb-4">Поздравляем! Вот твоя награда за прохождение:</p>
-                        <ScratchToReveal
-                            width={250}
-                            height={150}
-                            minScratchPercentage={40}
-                            className={cn(
-                                `
-                                  relative flex items-center justify-center
-                                  overflow-hidden rounded-2xl
+                        {/*<p className="mb-4">Поздравляем! Вот твоя награда за прохождение:</p>*/}
+                        {/*<ScratchToReveal*/}
+                        {/*    width={250}*/}
+                        {/*    height={150}*/}
+                        {/*    minScratchPercentage={40}*/}
+                        {/*    className={cn(*/}
+                        {/*        `*/}
+                        {/*          relative flex items-center justify-center*/}
+                        {/*          overflow-hidden rounded-2xl*/}
 
-                                  after:fixed after:z-[-10] after:h-[590px]
-                                  after:w-[590px] after:animate-spin
-                                  after:bg-[url(/rays.png)] after:content-[""]
-                                  after:[animation-duration:15000ms]
-                                `,
-                                isFetchingPromo
-                                    ? 'bg-gray-100'
-                                    : fetchPromoError
-                                        ? 'bg-red-100'
-                                        : promoCode
-                                            ? 'bg-green-100'
-                                            : 'bg-gray-100'
-                            )}
-                            onComplete={() => confettiBoom()}
-                            gradientColors={['#A97CF8', '#F38CB8', '#FDCC92']}
-                        >
-                            {isFetchingPromo ? (
-                                <span className="text-4xl">Загрузка...</span>
-                            ) : fetchPromoError ? (
-                                <span className="text-2xl">{fetchPromoError}</span>
-                            ) : promoCode ? (
-                                <span className="text-4xl">{promoCode}</span>
-                            ) : (
-                                <span className="text-2xl">Нет доступных ваучеров.</span>
-                            )}
-                        </ScratchToReveal>
+                        {/*          after:fixed after:z-[-10] after:h-[590px]*/}
+                        {/*          after:w-[590px] after:animate-spin*/}
+                        {/*          after:bg-[url(/rays.png)] after:content-[""]*/}
+                        {/*          after:[animation-duration:15000ms]*/}
+                        {/*        `,*/}
+                        {/*        isFetchingPromo*/}
+                        {/*            ? 'bg-gray-100'*/}
+                        {/*            : fetchPromoError*/}
+                        {/*                ? 'bg-red-100'*/}
+                        {/*                : promoCode*/}
+                        {/*                    ? 'bg-green-100'*/}
+                        {/*                    : 'bg-gray-100'*/}
+                        {/*    )}*/}
+                        {/*    onComplete={() => confettiBoom()}*/}
+                        {/*    gradientColors={['#A97CF8', '#F38CB8', '#FDCC92']}*/}
+                        {/*>*/}
+                        {/*    {isFetchingPromo ? (*/}
+                        {/*        <span className="text-4xl">Загрузка...</span>*/}
+                        {/*    ) : fetchPromoError ? (*/}
+                        {/*        <span className="text-2xl">{fetchPromoError}</span>*/}
+                        {/*    ) : promoCode ? (*/}
+                        {/*        <span className="text-4xl">{promoCode}</span>*/}
+                        {/*    ) : (*/}
+                        {/*        <span className="text-2xl">Нет доступных ваучеров.</span>*/}
+                        {/*    )}*/}
+                        {/*</ScratchToReveal>*/}
+                        <p>Благодарим за прохождение опроса!</p>
+                        <Button className={"mt-4"}>
+                            <Link href={"/"}>На главную</Link>
+                        </Button>
                     </motion.div>
                 ) : (
                     <>
@@ -352,9 +357,10 @@ const SurveyBuilder = ({initialSchema, surveyId, userId}: SurveyBuilderProps) =>
                                     </p>
                                 </div>
                                 <div className={`flex gap-2 self-end`}>
-                                    <Button onClick={handleBack} size="icon" variant="outline"
+                                    <Button onClick={handleBack} variant="outline"
                                             disabled={currentQuestion === 0}>
                                         <ArrowLeft/>
+                                        Предыдущий
                                     </Button>
                                     <Button onClick={handleNext} size="icon" variant="outline"
                                             disabled={isNextDisabled()}>

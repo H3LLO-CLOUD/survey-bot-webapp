@@ -10,8 +10,8 @@ import {
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {BackButtonHandler} from "@/components/tma/back-button-handler";
 import SurveysList from "@/components/containers/surveys-list";
-import {Button} from "@/components/ui/button";
-import { Link } from "next-view-transitions";
+// import {Button} from "@/components/ui/button";
+// import {Link} from "next-view-transitions";
 
 export default function Home() {
     const initDataState = useSignal(initData.state);
@@ -22,7 +22,7 @@ export default function Home() {
                 await axios.post('/api/create-user', {
                     ...initDataState?.user
                 }, {
-                    validateStatus: (status) => status ===409
+                    validateStatus: (status) => status === 409
                 });
             } catch (error) {
                 if (axios.isAxiosError(error)) {
@@ -53,16 +53,15 @@ export default function Home() {
                         <AvatarFallback>{initDataState?.user?.firstName.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div className="flex items-center gap-2 font-mono">
-                        <Image src="/hi.webp" className={`h-6 w-6`} width={24} height={24} alt={"Привет"} /> Привет, {initDataState && initDataState.user?.firstName}! <Button><Link href={"/survey/1"}>Test</Link></Button>
+                        <Image src="/hi.webp" className={`h-6 w-6`} width={24} height={24}
+                               alt={"Привет"}/> Привет, {initDataState && initDataState.user?.firstName}! {/* <Button><Link href={"/survey/1"}>Test</Link></Button> */}
                     </div>
                     <span className="mb-0 font-mono">
                         Активные опросы для тебя:
                     </span>
                 </div>
             </div>
-            <div className="block">
-                <SurveysList/>
-            </div>
+            <SurveysList/>
         </BackButtonHandler>
     );
 }

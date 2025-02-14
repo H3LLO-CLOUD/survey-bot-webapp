@@ -71,7 +71,7 @@ const Page = () => {
                 }
                 <div className="container mx-auto">
                     <SurveyBuilder initialSchema={survey} surveyId={params.surveyId} title={survey.title}
-                                   description={survey.description} userId={initDataState?.user?.id} />
+                                   description={survey.description} userId={initDataState?.user?.id}/>
                 </div>
             </div>
         </BackButtonHandler>

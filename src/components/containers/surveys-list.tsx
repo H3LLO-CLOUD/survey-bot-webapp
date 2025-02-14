@@ -1,6 +1,7 @@
 import {cn} from "@/lib/utils";
 import {useTransitionRouter} from "next-view-transitions";
-import {ArrowUpRight, CheckCheck, Gift} from "lucide-react";
+import {CheckCheck} from "lucide-react";
+// import {ArrowUpRight, CheckCheck, Gift} from "lucide-react";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {Progress} from "@/components/ui/progress";
@@ -10,29 +11,34 @@ import Image from "next/image";
 import {Carousel, CarouselApi, CarouselContent, CarouselItem} from "@/components/ui/carousel";
 
 const Survey = ({
-                    id, userId, title, progress, description
+                    id,
+                    // userId,
+                    title,
+                    progress,
+                    description
                 }: SurveyType) => {
-    const [promoCode, setPromoCode] = useState<string | null>(null);
-
-    const fetchPromoCode = async (surveyId, userId) => {
-        try {
-            const response = await axios.get('/api/get-promo', {headers: {userId: userId, surveyId: surveyId}});
-            setPromoCode(response.data.promoCode); // Assuming the API returns { promoCode: "CODE123" }
-        } catch (error) {
-            console.error('Error fetching promo code:', error);
-        }
-    };
+    // const [promoCode, setPromoCode] = useState<string | null>(null);
+    //
+    // const fetchPromoCode = async (surveyId, userId) => {
+    //     try {
+    //         const response = await axios.get('/api/get-promo', {headers: {userId: userId, surveyId: surveyId}});
+    //         setPromoCode(response.data.promoCode); // Assuming the API returns { promoCode: "CODE123" }
+    //     } catch (error) {
+    //         console.error('Error fetching promo code:', error);
+    //     }
+    // };
     const router = useTransitionRouter();
 
     return (
         <div
             onClick={() => {
                 if (progress === 100) {
-                    fetchPromoCode(id, userId)
+                    // fetchPromoCode(id, userId).then()
                     return popup
                         .open({
                             title: 'Уведомление',
-                            message: `Твой промокод за прохождение опроса: ${promoCode}`,
+                            // message: `Твой промокод за прохождение опроса: ${promoCode}`,
+                            message: "Опрос уже пройден.",
                             buttons: [{id: 'ok', type: 'ok'}]
                         })
                         .then(buttonId =>
@@ -48,11 +54,11 @@ const Survey = ({
             style={{viewTransitionName: `card-${id}`}}
         >
             <div className={cn(
-                "relative rounded-2xl",
+                "relative max-w-screen-sm rounded-2xl",
                 "border border-zinc-200/50",
                 `transition-all duration-300`,
                 `hover:border-zinc-300/50`,
-                progress === 100 && 'border-green-200/50 bg-green-50',
+                progress === 100 && 'border-green-200/50 bg-green-50/50',
             )}>
                 {/* CheckCheck */}
                 {progress === 100 && <span className={`
@@ -76,17 +82,18 @@ const Survey = ({
                                 {description}
                             </p>
                         </div>
-                        <div className={cn(
-                            "self-end rounded-full p-2",
-                            `bg-black/5`,
-                            "backdrop-blur-md",
-                            `group-hover:bg-black/10`,
-                            "transition-colors duration-300"
-                        )}>
-                            {progress < 100 ? <ArrowUpRight className={`
-                              h-4 w-4 text-zinc-800
-                            `}/> : <Gift className={`h-4 w-4 text-zinc-800`}/>}
-                        </div>
+                        {/*<div className={cn(*/}
+                        {/*    "self-end rounded-full p-2",*/}
+                        {/*    `bg-black/5`,*/}
+                        {/*    "backdrop-blur-md",*/}
+                        {/*    `group-hover:bg-black/10`,*/}
+                        {/*    "transition-colors duration-300"*/}
+                        {/*)}>*/}
+                        {/*    {progress < 100 ?*/}
+                        {/*        <ArrowUpRight className={`h-4 w-4 text-zinc-800`}/> :*/}
+                        {/*        <Gift className={`h-4 w-4 text-zinc-800`}/>*/}
+                        {/*    }*/}
+                        {/*</div>*/}
                     </div>
                 </div>
                 {progress > 0 && progress < 100 && <Progress value={progress} className={`
@@ -102,6 +109,7 @@ const SurveysList = () => {
     const initDataState = useSignal(initData.state);
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!api) {
@@ -121,10 +129,13 @@ const SurveysList = () => {
     useEffect(() => {
         const fetchSurveyList = async () => {
             try {
+                setLoading(true);
                 const response = await axios.get('/api/get-survey-list', {headers: {userId: initDataState?.user?.id}});
                 setSurveys(response.data);
             } catch (error) {
                 console.error('Error:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -132,32 +143,30 @@ const SurveysList = () => {
     }, [initDataState]);
 
     return (
-        <div className="container px-4">
-            <div className="flex flex-col gap-10">
-                <Carousel setApi={setApi} className="w-full">
-                    <CarouselContent>
-                        {surveys.length > 0 && surveys.map((survey, index) => (
-                            <CarouselItem key={index}>
-                                <Survey
-                                    key={survey.title}
-                                    {...survey}
-                                />
-                            </CarouselItem>
-                        ))
-                        }
-                    </CarouselContent>
-                </Carousel>
-                {surveys.length <= 0 && <div className={`
-                  flex w-full flex-col items-center
-                `}>
-                    <Image src="/upset.webp"
-                           unoptimized
-                           className={`h-20 w-20`} width={80}
-                           height={80} alt={"Upset"}/>
-                    <span>Пока что, активных опросов нет.</span>
-                </div>}
-
-            </div>
+        <div className="flex flex-col gap-10">
+            <Carousel setApi={setApi} className="w-full">
+                <CarouselContent>
+                    {surveys.length > 0 && surveys.map((survey, index) => (
+                        <CarouselItem key={index}>
+                            <Survey
+                                key={survey.title}
+                                {...survey}
+                            />
+                        </CarouselItem>
+                    ))
+                    }
+                </CarouselContent>
+            </Carousel>
+            {loading && <div className={`flex w-full flex-col items-center`}><span>Идёт загрузка...</span></div>}
+            {!loading && surveys.length <= 0 && <div className={`
+              flex w-full flex-col items-center
+            `}>
+                <Image src="/upset.webp"
+                       unoptimized
+                       className={`h-20 w-20`} width={80}
+                       height={80} alt={"Upset"}/>
+                <span>Пока что, активных опросов нет.</span>
+            </div>}
         </div>
     )
 }

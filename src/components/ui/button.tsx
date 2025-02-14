@@ -49,6 +49,12 @@ const buttonVariants = cva(
 
                       focus-visible:outline-none focus-visible:ring-1
                     `,
+                primary:
+                    `
+                      bg-primary text-primary-foreground shadow-sm
+
+                      hover:bg-primary/80
+                    `,
                 secondary:
                     `
                       bg-secondary text-secondary-foreground shadow-sm
