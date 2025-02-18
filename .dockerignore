@@ -1,0 +1,8 @@
+node_modules
+.env*
+!.env.production
+!.env.development
+.next
+.yarn
+!.yarn/releases
+.idea
