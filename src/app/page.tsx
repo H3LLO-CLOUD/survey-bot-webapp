@@ -54,7 +54,8 @@ export default function Home() {
                     </Avatar>
                     <div className="flex items-center gap-2 font-mono">
                         <Image src="/hi.webp" className={`h-6 w-6`} width={24} height={24}
-                               alt={"Привет"}/> Привет, {initDataState && initDataState.user?.firstName}! {/* <Button><Link href={"/survey/1"}>Test</Link></Button> */}
+                               alt={"Привет"}/> Привет, {initDataState && initDataState.user?.firstName}!
+                         {/*<Button><Link href={"/survey/1"}>Test</Link></Button>*/}
                     </div>
                     <span className="mb-0 font-mono">
                         Активные опросы для тебя:
